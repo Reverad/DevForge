@@ -1,2 +1,2 @@
 
-app_name = 'projects'
+app_name = "projects"
