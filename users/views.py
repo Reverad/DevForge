@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model, login
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import generic
 
 from users.forms import RegisterForm
@@ -17,3 +17,35 @@ class RegisterView(generic.CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
         return response
+
+
+class ProfileDetailView(generic.DetailView):
+    model = User
+    template_name = "users/profile.html"
+    context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        profile_user = context["profile_user"]
+        current_user = self.request.user
+
+        if current_user != profile_user:
+            profile_user.first_name = ""
+            profile_user.last_name = ""
+            profile_user.email = ""
+
+        return context
+
+
+
+class ProfileUpdateView(generic.UpdateView):
+    model = User
+    fields = ("first_name", "last_name", "email", "bio", "github")
+    template_name = "users/edit.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_success_url(self):
+        return reverse("users:profile", kwargs={"pk": self.object.pk})

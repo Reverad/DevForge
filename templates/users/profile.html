@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile_user.username }}'s Profile — DevForge{% endblock %}
+
+{% block header %}
+  Profile
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+
+      <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600 relative"></div>
+
+      <div class="px-6 pb-6 relative flex flex-col sm:flex-row items-start sm:items-end gap-4 -mt-12">
+        <div class="w-24 h-24 rounded-2xl bg-white p-1 shadow-md shrink-0 z-10">
+          <div
+              class="w-full h-full rounded-xl bg-indigo-600 text-white flex items-center justify-center text-3xl font-bold tracking-wider">
+            {{ profile_user.username|slice:":1"|upper }}
+          </div>
+        </div>
+
+        <div class="flex-1 min-w-0 pt-2 sm:pt-0">
+          <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-bold text-slate-900 truncate">
+              {% if profile_user.first_name or profile_user.last_name %}
+                {{ profile_user.first_name }} {{ profile_user.last_name }}
+              {% else %}
+                {{ profile_user.username }}
+              {% endif %}
+            </h1>
+
+            {% if user == profile_user %}
+              <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            It's You
+                        </span>
+            {% endif %}
+          </div>
+          <p class="text-sm text-slate-400 font-medium">@{{ profile_user.username }}</p>
+        </div>
+
+        {% if user == profile_user %}
+          <div class="shrink-0 z-10 pt-2 sm:pt-0 w-full sm:w-auto">
+            <a href="{% url 'users:edit' %}"
+               class="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto px-4 py-2 border border-slate-200 bg-white text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 shadow-xs transition-all">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              Edit Profile
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      <hr class="border-slate-100 mx-6">
+
+      <div class="p-6 space-y-6">
+
+        {% if user == profile_user and profile_user.first_name or profile_user.last_name %}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">First Name</p>
+              <p class="text-sm font-medium text-slate-800 mt-1">{{ profile_user.first_name|default:"—" }}</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Last Name</p>
+              <p class="text-sm font-medium text-slate-800 mt-1">{{ profile_user.last_name|default:"—" }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Biography</h3>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 min-h-[80px]">
+            {% if profile_user.bio %}
+              <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">{{ profile_user.bio }}</p>
+            {% else %}
+              <p class="text-sm text-slate-400 italic">No biography provided yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider">Developer Links</h3>
+          {% if profile_user.github %}
+            <a href="{{ profile_user.github }}" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-medium hover:bg-slate-800 transition-all shadow-md shadow-slate-900/10">
+              <svg class="w-5 h-5 fill-currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.0.069-.608 1 .07 1.527 1.035 1.527 1.035.89 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+              </svg>
+              GitHub Profile
+            </a>
+          {% else %}
+            <div
+                class="flex items-center gap-2 text-sm text-slate-400 bg-slate-50 p-4 border border-slate-100 rounded-xl">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+              </svg>
+              <span class="italic">No GitHub account linked.</span>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
