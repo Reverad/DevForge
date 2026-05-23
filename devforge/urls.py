@@ -24,4 +24,5 @@ urlpatterns = [
     # path("team/", include("teams.urls", namespace="teams")),
     # path("project/", include("projects.urls", namespace="projects")),
     # path("task/", include("tasks.urls", namespace="tasks")),
+    path("accounts/", include("django.contrib.auth.urls")),
 ]
