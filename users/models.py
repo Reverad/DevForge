@@ -10,8 +10,8 @@ class Position(models.Model):
 
 
 class User(AbstractUser):
-    bio = models.CharField(max_length=255, blank=True, null=True)
-    github = models.URLField(max_length=255, blank=True, null=True)
+    bio = models.CharField(max_length=255, blank=True)
+    github = models.URLField(max_length=255, blank=True)
     position = models.ForeignKey(Position, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
