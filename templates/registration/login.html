@@ -39,7 +39,7 @@
     </div>
   {% endif %}
 
-  <form method="post" class="space-y-5" action="{% url 'login' %}">
+  <form method="post" class="space-y-5" action="">
     {% csrf_token %}
     <div class="space-y-1.5">
       <label for="id_username" class="text-sm font-medium text-slate-700">Username or Email</label>
@@ -78,7 +78,7 @@
 
   <p class="text-center text-xs text-slate-500">
     Don't have an account?
-    <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">Create one</a>
+    <a href="{% url 'users:register' %}" class="font-semibold text-indigo-600 hover:text-indigo-500 transition-colors">Create one</a>
   </p>
 </div>
 </body>
