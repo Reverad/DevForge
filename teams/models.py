@@ -9,5 +9,9 @@ class Team(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_teams", on_delete=models.CASCADE)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="teams", blank=True)
 
+    class Meta:
+        verbose_name_plural = "Teams"
+        verbose_name = "Team"
+
     def __str__(self):
         return self.name

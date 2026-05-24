@@ -20,5 +20,9 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="projects")
 
+    class Meta:
+        verbose_name_plural = "Projects"
+        verbose_name = "Project"
+
     def __str__(self):
         return self.title

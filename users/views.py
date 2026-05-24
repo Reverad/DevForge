@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 
@@ -19,7 +20,7 @@ class RegisterView(generic.CreateView):
         return response
 
 
-class ProfileDetailView(generic.DetailView):
+class ProfileDetailView(LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = "users/profile.html"
     context_object_name = "profile_user"
@@ -38,8 +39,7 @@ class ProfileDetailView(generic.DetailView):
         return context
 
 
-
-class ProfileUpdateView(generic.UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = User
     fields = ("first_name", "last_name", "email", "bio", "github")
     template_name = "users/edit.html"

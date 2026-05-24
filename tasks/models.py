@@ -13,12 +13,20 @@ PRIORITY_CHOICES = [
 class TaskType(models.Model):
     name = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name_plural = "TaskTypes"
+        verbose_name = "TaskType"
+
     def __str__(self):
         return self.name
 
 
 class Tag(models.Model):
     name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name_plural = "Tags"
+        verbose_name = "Tag"
 
     def __str__(self):
         return self.name
@@ -35,6 +43,11 @@ class Task(models.Model):
     task_type = models.ForeignKey(TaskType, on_delete=models.SET_NULL, related_name="tasks", blank=True, null=True)
     assignees = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="tasks", blank=True)
     tags = models.ManyToManyField(Tag, related_name="tasks", blank=True)
+
+    class Meta:
+        verbose_name_plural = "Tasks"
+        verbose_name = "Task"
+        ordering = ["-due_date"]
 
     def __str__(self):
         return self.title
