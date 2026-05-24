@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404
 from django.views import generic
@@ -10,7 +11,7 @@ from teams.models import Team
 
 User = get_user_model()
 
-class TeamsView(generic.ListView):
+class TeamsView(LoginRequiredMixin, generic.ListView):
     model = Team
     paginate_by = 9
     template_name = "teams/team.html"
@@ -22,7 +23,7 @@ class TeamsView(generic.ListView):
         ).distinct()
 
 
-class TeamCreateView(generic.CreateView):
+class TeamCreateView(LoginRequiredMixin, generic.CreateView):
     model = Team
     form_class = TeamCreateForm
     template_name = "teams/team_create.html"
@@ -37,7 +38,7 @@ class TeamCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class TeamDetailView(generic.DetailView):
+class TeamDetailView(LoginRequiredMixin, generic.DetailView):
     model = Team
 
     def post(self, request, *args, **kwargs):

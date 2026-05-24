@@ -46,7 +46,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {% for team in teams %}
-          <a href="{% url 'teams:team-detail' pk=team.id  %}"
+          <a href="{% url 'teams:team-detail' pk=team.id %}"
              class="group relative bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-200 hover:shadow-lg hover:shadow-slate-100/80 transition-all duration-200 flex flex-col justify-between min-h-[160px]">
 
             <div class="space-y-2">
@@ -98,24 +98,7 @@
           </a>
         {% endfor %}
       </div>
-
-      {% if is_paginated %}
-        <div class="flex items-center justify-center gap-2 pt-6">
-          {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}"
-               class="px-3 py-1.5 bg-white border border-slate-200 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-50 transition-all">Previous</a>
-          {% endif %}
-
-          <span class="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        </span>
-
-          {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}"
-               class="px-3 py-1.5 bg-white border border-slate-200 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-50 transition-all">Next</a>
-          {% endif %}
-        </div>
-      {% endif %}
+      {% include "includes/pagination.html" %}
     {% endif %}
   </div>
 {% endblock %}

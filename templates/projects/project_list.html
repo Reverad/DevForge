@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}My Projects — DevForge{% endblock %}
+
+{% block header %}
+  My Projects
+{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+
+    <form method="get" action=""
+          class="flex flex-col lg:flex-row items-stretch lg:items-end gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-6">
+
+      {% include "includes/search_bar.html" %}
+
+      <div class="w-full lg:w-56">
+        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Filter by Team</label>
+        <select name="team"
+                class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer">
+          <option value="">All Teams</option>
+          {% for team in user_teams %}
+            <option value="{{ team.id }}" {% if request.GET.team == team.id|slugify %}selected{% endif %}>
+              {{ team.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="w-full lg:w-44">
+        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Status</label>
+        <select name="status"
+                class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer">
+          <option value="">All Statuses</option>
+          <option value="Open" {% if request.GET.status == 'Open' %}selected{% endif %}>Open</option>
+          <option value="Closed" {% if request.GET.status == 'Closed' %}selected{% endif %}>Closed</option>
+        </select>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button type="submit"
+                class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors cursor-pointer">
+          Apply
+        </button>
+        {% if request.GET.search or request.GET.team or request.GET.status %}
+          <a href="{% url 'projects:project-list' %}"
+             class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors text-center">
+            Reset
+          </a>
+        {% endif %}
+      </div>
+    </form>
+
+    {% if not project_list %}
+      <div class="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 max-w-md mx-auto shadow-xs">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-50 text-slate-400 mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-slate-900">No projects found</h3>
+        <p class="text-xs text-slate-500 mt-1">Try changing your filter settings or check back later.</p>
+      </div>
+    {% else %}
+
+      <div class="flex items-center justify-between bg-white px-5 py-3.5 rounded-2xl border border-slate-200 shadow-xs">
+        <div class="text-sm font-medium text-slate-500">
+          Showing <span class="font-semibold text-slate-900">{{ paginator.count }}</span>
+          project{{ paginator.count|pluralize }}
+        </div>
+        <span class="text-xs text-slate-400 font-medium">Page {{ page_obj.number }} of {{ paginator.num_pages }}</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {% for project in project_list %}
+          <a href="#"
+             class="group bg-white p-4 rounded-2xl border border-slate-200 hover:border-indigo-200 hover:shadow-md hover:shadow-slate-100/70 transition-all duration-200 flex items-center justify-between gap-4">
+
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div
+                  class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 flex items-center justify-center shrink-0 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+
+              <div class="min-w-0 space-y-0.5">
+                <h3 class="text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors truncate">
+                  {{ project.title }}
+                </h3>
+
+                <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                  <span
+                      class="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-medium tracking-wide">
+                    {{ project.genre }}
+                  </span>
+                  <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                  <span class="font-medium text-slate-500 truncate max-w-[100px] lg:max-w-[140px]">
+                    {{ project.team.name }}
+                  </span>
+                  <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                  <span>{{ project.created_at|date:"M d, Y" }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 shrink-0">
+
+              {% if project.status == 'Open' %}
+                <span
+                    class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 uppercase tracking-wide">
+                  Open
+                </span>
+              {% else %}
+                <span
+                    class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 uppercase tracking-wide">
+                  Closed
+                </span>
+              {% endif %}
+
+              <div
+                  class="text-slate-300 group-hover:text-indigo-500 transform group-hover:translate-x-0.5 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </div>
+            </div>
+
+          </a>
+        {% endfor %}
+      </div>
+
+      {% include "includes/pagination.html" %}
+    {% endif %}
+  </div>
+{% endblock %}
