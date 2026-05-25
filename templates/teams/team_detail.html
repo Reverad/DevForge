@@ -124,7 +124,7 @@
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm font-semibold text-slate-800 truncate">
-                    {% if member.first_name or member.last_name %}
+                    {% if member.first_name and member.last_name %}
                       {{ member.first_name }} {{ member.last_name }}
                     {% else %}
                       {{ member.username }}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} — DevForge{% endblock %}
+
+{% block header %}
+  {{ project.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="space-y-6">
+
+    <div class="flex items-center justify-between">
+      <a href="{% url 'projects:project-list' %}"
+         class="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Projects
+      </a>
+
+      {% if project.team.owner == request.user %}
+        <div class="flex items-center gap-2">
+
+          <a href="{% url 'projects:project-update' pk=project.id %}"
+             class="px-4 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-xs">
+            Edit Project
+          </a>
+
+          <form method="post" action="{% url 'projects:project-delete' pk=project.id %}"
+                onsubmit="return confirm('Are you sure you want to delete this project? This action cannot be undone.');"
+                class="inline-block mb-0">
+            {% csrf_token %}
+            <button type="submit"
+                    class="px-4 py-2 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors shadow-xs cursor-pointer">
+              Delete Project
+            </button>
+          </form>
+
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+      <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">About Project</h2>
+          <div class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+            {{ project.description|default:"No description provided for this project." }}
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Project Tasks</h2>
+            <span class="text-xs font-semibold text-slate-400">0 tasks</span>
+          </div>
+          <p class="text-xs text-slate-400 italic text-center py-4">No tasks linked to this project yet.</p>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+          <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Project Info</h2>
+
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-slate-500 font-medium">Status</span>
+            {% if project.status == 'Open' %}
+              <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 uppercase tracking-wide">
+                Open
+              </span>
+            {% else %}
+              <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200 uppercase tracking-wide">
+                Closed
+              </span>
+            {% endif %}
+          </div>
+
+          <div class="flex items-center justify-between text-sm border-t border-slate-50 pt-3">
+            <span class="text-slate-500 font-medium">Genre</span>
+            <span class="px-2 py-0.5 bg-slate-50 border border-slate-200 text-slate-600 rounded-md text-xs font-medium">
+              {{ project.genre }}
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between text-sm border-t border-slate-50 pt-3">
+            <span class="text-slate-500 font-medium">Deadline</span>
+            <span
+                class="text-xs font-semibold {% if project.deadline %}text-slate-700{% else %}text-slate-400 italic{% endif %}">
+              {{ project.deadline|date:"M d, Y"|default:"No deadline set" }}
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+          <div>
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Assigned Team</h2>
+            <h3 class="text-sm font-bold text-slate-800 mt-1 truncate">{{ project.team.name }}</h3>
+          </div>
+
+          <div class="border-t border-slate-50 pt-3 space-y-3">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Team Members</p>
+
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-700 font-semibold truncate max-w-[130px]">{{ project.team.owner.username }}</span>
+              <span
+                  class="px-1.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded text-[10px] font-bold">Owner</span>
+            </div>
+
+            {% for member in project.team.members.all %}
+              {% if member != project.team.owner %}
+                <div class="flex items-center justify-between text-xs border-t border-slate-50/50 pt-2">
+                  <span class="text-slate-600 truncate max-w-[130px]">{{ member.username }}</span>
+                  <span class="text-slate-400 text-[10px]">Member</span>
+                </div>
+              {% endif %}
+            {% empty %}
+              <p class="text-[11px] text-slate-400 italic">No other members in this team.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
