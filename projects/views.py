@@ -10,7 +10,7 @@ from teams.models import Team
 
 class ProjectListView(LoginRequiredMixin, generic.ListView):
     model = Project
-    paginate_by = 20
+    paginate_by = 8
 
     def get_queryset(self):
         user = self.request.user

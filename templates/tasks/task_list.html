@@ -9,6 +9,25 @@
 {% block content %}
   <div class="max-w-5xl mx-auto space-y-4">
 
+  <form method="get" action=""
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs mb-0 flex items-end gap-3">
+
+    {% include "includes/search_bar.html" %}
+
+    {% if request.GET.search %}
+      <a href="{% url 'tasks:task-list' %}"
+         class="px-4 py-2 text-sm font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors h-[38px] flex items-center justify-center">
+        Clear
+      </a>
+    {% endif %}
+
+    <button type="submit"
+            class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-100 transition-colors h-[38px] cursor-pointer">
+      Find
+    </button>
+  </form>
+  <div class="max-w-5xl mx-auto space-y-4">
+
     <div class="bg-white px-5 py-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
       <div class="text-sm font-medium text-slate-500">
         You have <span class="font-semibold text-slate-900">{{ task_list.count }}</span> assigned
@@ -74,6 +93,7 @@
 
         </a>
       {% endfor %}
+      {% include "includes/pagination.html" %}
     </div>
 
   </div>
