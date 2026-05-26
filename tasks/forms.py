@@ -22,6 +22,11 @@ class TaskUpdateForm(forms.ModelForm):
         widgets = {
             "assignees": forms.CheckboxSelectMultiple(),
             "tags": forms.CheckboxSelectMultiple(),
+            "due_date": forms.DateInput(
+                attrs={
+                    "placeholder": "YYYY-MM-DD",
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
