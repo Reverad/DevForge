@@ -16,7 +16,7 @@ class ProjectListView(LoginRequiredMixin, generic.ListView):
         user = self.request.user
         queryset = Project.objects.filter(
             Q(team__owner=user) | Q(team__members=user)
-        ).distinct()
+        ).select_related("team").distinct()
 
         team_id = self.request.GET.get("team")
         status = self.request.GET.get("status")
