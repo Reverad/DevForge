@@ -15,7 +15,13 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        queryset = Task.objects.filter(assignees=self.request.user).select_related("project")
+        queryset = Task.objects.filter(
+            assignees=self.request.user
+        ).select_related(
+            "project"
+        ).prefetch_related(
+            "assignees"
+        )
 
         return filter_tasks(queryset, self.request.GET)
 
@@ -69,7 +75,13 @@ class ProjectTaskListView(LoginRequiredMixin, generic.ListView):
             team__members=self.request.user
         )
 
-        queryset = Task.objects.filter(project=project).select_related("project", "task_type")
+        queryset = Task.objects.filter(
+            project=project
+        ).select_related(
+            "project", "task_type"
+        ).prefetch_related(
+            "assignees"
+        )
 
         return filter_tasks(queryset, self.request.GET)
 
