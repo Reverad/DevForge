@@ -1,4 +1,8 @@
-def filter_tasks(queryset, get_params):
+from django.db.models import QuerySet
+from django.http import QueryDict
+
+
+def filter_tasks(queryset: QuerySet, get_params: QueryDict) -> QuerySet:
     search_query = get_params.get("search")
     priority_query = get_params.get("priority")
 
