@@ -130,7 +130,8 @@
                       {{ member.username }}
                     {% endif %}
                   </p>
-                  <a href="{% url 'users:profile' pk=member.id %}"><p class="text-[11px] text-slate-400 truncate">@{{ member.username }}</p></a>
+                  <a href="{% url 'users:profile' pk=member.id %}"><p class="text-[11px] text-slate-400 truncate">
+                    @{{ member.username }}</p></a>
                 </div>
               </div>
 
