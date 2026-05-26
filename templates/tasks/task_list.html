@@ -10,21 +10,34 @@
   <div class="max-w-5xl mx-auto space-y-4">
 
   <form method="get" action=""
-        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs mb-0 flex items-end gap-3">
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs mb-0 flex flex-col sm:flex-row sm:items-end gap-3">
 
     {% include "includes/search_bar.html" %}
 
-    {% if request.GET.search %}
-      <a href="{% url 'tasks:task-list' %}"
-         class="px-4 py-2 text-sm font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors h-[38px] flex items-center justify-center">
-        Clear
-      </a>
-    {% endif %}
+    <div class="w-full sm:w-48">
+      <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Priority</label>
+      <select name="priority"
+              class="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all h-[38px] font-medium text-slate-700 cursor-pointer">
+        <option value="" {% if not request.GET.priority %}selected{% endif %}>All Priorities</option>
+        <option value="High" {% if request.GET.priority == 'High' %}selected{% endif %}>High</option>
+        <option value="Medium" {% if request.GET.priority == 'Medium' %}selected{% endif %}>Medium</option>
+        <option value="Low" {% if request.GET.priority == 'Low' %}selected{% endif %}>Low</option>
+      </select>
+    </div>
 
-    <button type="submit"
-            class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-100 transition-colors h-[38px] cursor-pointer">
-      Apply
-    </button>
+    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+      {% if request.GET.search or request.GET.priority %}
+        <a href="{% url 'tasks:task-list' %}"
+           class="px-4 py-2 text-sm font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors h-[38px] flex items-center justify-center min-w-[70px]">
+          Clear
+        </a>
+      {% endif %}
+
+      <button type="submit"
+              class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-100 transition-colors h-[38px] cursor-pointer min-w-[110px]">
+        Apply
+      </button>
+    </div>
   </form>
   <div class="max-w-5xl mx-auto space-y-4">
 

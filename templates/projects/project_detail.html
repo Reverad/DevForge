@@ -50,12 +50,14 @@
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Project Tasks</h2>
-            <span class="text-xs font-semibold text-slate-400">0 tasks</span>
-          </div>
-          <p class="text-xs text-slate-400 italic text-center py-4">No tasks linked to this project yet.</p>
+        <div class="pt-2">
+          <a href="{% url 'tasks:project-task-list' pk=project.id %}"
+             class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-indigo-100 cursor-pointer text-center">
+            <span>View Project Tasks ({{ project.tasks.count }})</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
         </div>
       </div>
 
