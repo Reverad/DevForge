@@ -27,7 +27,7 @@
             <h1 class="text-2xl font-bold text-white tracking-tight">{{ team.name }}</h1>
 
             {% if team.owner == request.user %}
-              <form method="post" action="" class="mb-0">
+              <form method="post" action="{% url 'teams:team-delete' pk=team.id %}" class="mb-0">
                 {% csrf_token %}
                 <input type="hidden" name="delete_team" value="1">
                 <button type="submit"
@@ -148,7 +148,7 @@
                   </span>
 
                   {% if team.owner == request.user %}
-                    <form method="post" action="" class="hidden group-hover:block">
+                    <form method="post" action="{% url 'teams:team-remove-member' pk=team.id %}" class="hidden group-hover:block">
                       {% csrf_token %}
                       <input type="hidden" name="member_id" value="{{ member.id }}">
                       <button type="submit"
@@ -173,7 +173,7 @@
       <h3 class="text-lg font-bold text-slate-900 mb-2">Add Team Member</h3>
       <p class="text-xs text-slate-500 mb-4">Enter the exact username of the user you want to add to the project.</p>
 
-      <form method="post" action="">
+      <form method="post" action="{% url 'teams:team-add-member' pk=team.id %}">
         {% csrf_token %}
         <input type="text" name="username" placeholder="e.g. username" required
                class="w-full p-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-4">
@@ -197,7 +197,7 @@
     <div class="bg-white rounded-2xl border border-slate-200 p-6 w-full max-w-lg shadow-xl m-4">
       <h3 class="text-lg font-bold text-slate-900 mb-4">Edit Team Description</h3>
 
-      <form method="post" action="">
+      <form method="post" action="{% url 'teams:team-update-description' pk=team.id %}">
         {% csrf_token %}
         <textarea name="description" rows="5"
                   class="w-full p-3 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-indigo-500 mb-4">{{ team.description }}</textarea>
