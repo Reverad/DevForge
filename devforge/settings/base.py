@@ -13,9 +13,9 @@ import os
 from pathlib import Path
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-&9rf2(-38ef-ajzml%e5s7avdvq1!)979cf%f^f8t8-ftv!18%")
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-&9rf2(-38ef-ajzml%e5s7avdvq1!)979cf%f^f8t8-ftv!18%")
 
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
