@@ -21,7 +21,7 @@ class TeamsView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Team.objects.filter(
             Q(owner=self.request.user) | Q(members=self.request.user)
-        ).distinct()
+        ).distinct().order_by("-id")
 
 
 class TeamCreateView(LoginRequiredMixin, generic.CreateView):
