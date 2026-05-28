@@ -1,22 +1,18 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-
+from django.contrib.auth import get_user_model
 from projects.models import Project
 from teams.models import Team
 
 User = get_user_model()
 
 
-class ProjectTests(TestCase):
-
+class ProjectViewTests(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username="denis", password="password123")
         self.user2 = User.objects.create_user(username="sergey", password="password123")
-
         self.team = Team.objects.create(name="Team mate", owner=self.user1)
         self.team.members.add(self.user1)
-
         self.project = Project.objects.create(
             title="review",
             description="Project description",
@@ -24,9 +20,6 @@ class ProjectTests(TestCase):
             status="Open",
             team=self.team
         )
-
-    def test_project_model_str(self):
-        self.assertEqual(str(self.project), "review")
 
     def test_project_list_view_authenticated(self):
         self.client.login(username="denis", password="password123")

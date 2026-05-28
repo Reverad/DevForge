@@ -1,16 +1,14 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-
 from users.models import Position
 
 User = get_user_model()
 
 
-class UserTests(TestCase):
+class UserViewTests(TestCase):
     def setUp(self):
-        self.position = Position.objects.create(name="python developer")
-
+        self.position = Position.objects.create(name="developer")
         self.user1 = User.objects.create_user(
             username="denis",
             password="password123",
@@ -28,12 +26,6 @@ class UserTests(TestCase):
             last_name="leonenko",
             email="mate@example.com"
         )
-
-    def test_position_model_str(self):
-        self.assertEqual(str(self.position), "python developer")
-
-    def test_user_model_str(self):
-        self.assertEqual(str(self.user1), "denis")
 
     def test_register_view_get(self):
         response = self.client.get(reverse("users:register"))
@@ -77,10 +69,9 @@ class UserTests(TestCase):
             "bio": "...",
             "github": "https://github.com/new"
         }
-
         response = self.client.post(reverse("users:edit"), data)
-        self.assertEqual(response.status_code, 302)
 
+        self.assertEqual(response.status_code, 302)
         self.user1.refresh_from_db()
         self.assertEqual(self.user1.first_name, "new")
         self.assertEqual(self.user1.bio, "...")

@@ -2,25 +2,18 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.messages import get_messages
-
 from teams.models import Team
 
 User = get_user_model()
 
 
-class TeamTests(TestCase):
+class TeamViewTests(TestCase):
     def setUp(self):
         self.denis = User.objects.create_user(username="denis", password="password123")
         self.sergey = User.objects.create_user(username="sergey", password="password123")
 
         self.team = Team.objects.create(name="Mate team", description="some description", owner=self.denis)
         self.team.members.add(self.denis)
-
-    def test_team_model_str(self):
-        self.assertEqual(str(self.team), "Mate team")
-
-    def test_team_absolute_url(self):
-        self.assertEqual(self.team.get_absolute_url(), f"/team/{self.team.pk}/")
 
     def test_teams_list_view_authenticated(self):
         self.client.login(username="denis", password="password123")
@@ -32,10 +25,9 @@ class TeamTests(TestCase):
     def test_team_create_view(self):
         self.client.login(username="denis", password="password123")
         response = self.client.post(reverse("teams:team-create"), {"name": "New Team", "description": "Desc"})
-
         self.assertEqual(response.status_code, 302)
-
         new_team = Team.objects.get(name="New Team")
+
         self.assertEqual(new_team.owner, self.denis)
         self.assertIn(self.denis, new_team.members.all())
 
@@ -77,6 +69,7 @@ class TeamTests(TestCase):
             kwargs={"pk": self.team.pk}),
             {"username": "vadym"}
         )
+
         self.assertEqual(response.status_code, 302)
 
         messages = [m.message for m in get_messages(response.wsgi_request)]
@@ -112,7 +105,7 @@ class TeamTests(TestCase):
             kwargs={"pk": self.team.pk}),
             {"description": "New description text"}
         )
-        self.assertEqual(response.status_code, 302)
 
+        self.assertEqual(response.status_code, 302)
         self.team.refresh_from_db()
         self.assertEqual(self.team.description, "New description text")
