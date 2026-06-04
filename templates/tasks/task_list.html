@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}My Tasks — DevForge{% endblock %}
+
+{% block header %}
+  My Tasks
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-5xl mx-auto space-y-4">
+
+  <form method="get" action=""
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs mb-0 flex flex-col sm:flex-row sm:items-end gap-3">
+
+    {% include "includes/search_bar.html" %}
+
+    <div class="w-full sm:w-48">
+      <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Priority</label>
+      <select name="priority"
+              class="w-full p-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:bg-white transition-all h-[38px] font-medium text-slate-700 cursor-pointer">
+        <option value="" {% if not request.GET.priority %}selected{% endif %}>All Priorities</option>
+        <option value="High" {% if request.GET.priority == 'High' %}selected{% endif %}>High</option>
+        <option value="Medium" {% if request.GET.priority == 'Medium' %}selected{% endif %}>Medium</option>
+        <option value="Low" {% if request.GET.priority == 'Low' %}selected{% endif %}>Low</option>
+      </select>
+    </div>
+
+    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+      {% if request.GET.search or request.GET.priority %}
+        <a href="{% url 'tasks:task-list' %}"
+           class="px-4 py-2 text-sm font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors h-[38px] flex items-center justify-center min-w-[70px]">
+          Clear
+        </a>
+      {% endif %}
+
+      <button type="submit"
+              class="px-5 py-2 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-100 transition-colors h-[38px] cursor-pointer min-w-[110px]">
+        Apply
+      </button>
+    </div>
+  </form>
+  <div class="max-w-5xl mx-auto space-y-4">
+
+    <div class="bg-white px-5 py-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div class="text-sm font-medium text-slate-500">
+        Showing <span class="font-semibold text-slate-900">{{ task_list.count }}</span> assigned
+        task{{ task_list.count|pluralize }}
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      {% for task in task_list %}
+        <a href="{% url 'tasks:task-detail' pk=task.id %}"
+           class="group block bg-white p-5 rounded-2xl border border-slate-200 hover:border-indigo-200 hover:shadow-md hover:shadow-slate-100/70 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer">
+
+          <div class="space-y-1.5 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+        <span class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors truncate">
+          {{ task.title }}
+        </span>
+
+              {% if task.task_type %}
+                <span
+                    class="px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-600 rounded-md text-[11px] font-medium">
+            {{ task.task_type.name }}
+          </span>
+              {% endif %}
+            </div>
+
+            <div class="flex items-center gap-1 text-xs text-slate-400 font-medium">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2z"></path>
+              </svg>
+              <span>Project: <span class="text-slate-600 font-semibold">{{ task.project.title }}</span></span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 flex-wrap sm:flex-nowrap">
+
+            {% if task.priority == 'High' %}
+              <span
+                  class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-100 uppercase tracking-wide">High</span>
+            {% elif task.priority == 'Medium' %}
+              <span
+                  class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-100 uppercase tracking-wide">Medium</span>
+            {% else %}
+              <span
+                  class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-slate-50 text-slate-500 border border-slate-200 uppercase tracking-wide">Low</span>
+            {% endif %}
+
+            <span
+                class="px-2 py-0.5 rounded-lg text-[11px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100 uppercase tracking-wide">
+        {{ task.get_status_display }}
+      </span>
+
+            <div class="text-xs font-semibold text-slate-500 pl-2 border-l border-slate-100 min-w-[90px] text-right">
+              {% if task.due_date %}
+                {{ task.due_date|date:"M d, Y" }}
+              {% else %}
+                <span class="text-slate-300 font-normal italic">No deadline</span>
+              {% endif %}
+            </div>
+
+          </div>
+
+        </a>
+      {% endfor %}
+      {% include "includes/pagination.html" %}
+    </div>
+
+  </div>
+{% endblock %}

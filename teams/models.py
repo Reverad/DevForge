@@ -1,0 +1,21 @@
+from django.conf import settings
+from django.db import models
+from django.urls import reverse
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="owned_teams", on_delete=models.CASCADE)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="teams", blank=True)
+
+    class Meta:
+        verbose_name_plural = "Teams"
+        verbose_name = "Team"
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("teams:team-detail", kwargs={"pk": self.pk})

@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% block title %}DevForge — web platform for managing game development{% endblock %}
+  </title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+
+<body class="h-full text-slate-900 flex overflow-hidden">
+
+{% include 'includes/sidebar.html' %}
+
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+  <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 relative">
+    <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+      {% block header %}{% endblock %}
+    </h1>
+  </header>
+
+  <main class="flex-1 overflow-y-auto p-6">
+    <div class="max-w-7xl mx-auto space-y-6">
+      {% if messages %}
+        <div id="messages-container" class="max-w-6xl mx-auto mb-4 space-y-2 px-4 sm:px-0">
+          {% for message in messages %}
+            <div class="django-message p-4 rounded-xl border flex items-center justify-between shadow-xs transition-all duration-500 opacity-100 transform translate-y-0
+        {% if message.tags == 'success' %}
+          bg-green-50 border-green-200 text-green-800
+        {% elif message.tags == 'error' %}
+          bg-red-50 border-red-200 text-red-800
+        {% elif message.tags == 'warning' %}
+          bg-amber-50 border-amber-200 text-amber-800
+        {% else %}
+          bg-blue-50 border-blue-200 text-blue-800
+        {% endif %}">
+
+              <div class="flex items-center gap-2 text-sm font-medium">
+          <span class="w-1.5 h-1.5 rounded-full
+            {% if message.tags == 'success' %} bg-green-500
+            {% elif message.tags == 'error' %} bg-red-500
+            {% elif message.tags == 'warning' %} bg-amber-500
+            {% else %} bg-blue-500 {% endif %}">
+          </span>
+                {{ message }}
+              </div>
+
+              <button onclick="this.parentElement.remove()"
+                      class="text-slate-400 hover:text-slate-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          {% endfor %}
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const alerts = document.querySelectorAll('.django-message');
+
+                alerts.forEach(function (alert) {
+                    setTimeout(function () {
+                        alert.classList.add('opacity-0', '-translate-y-2');
+                        setTimeout(function () {
+                            alert.remove();
+                        }, 500);
+
+                    }, 4500);
+                });
+            });
+        </script>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+</body>
+</html>
